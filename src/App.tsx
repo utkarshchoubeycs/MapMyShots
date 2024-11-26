@@ -128,23 +128,29 @@ function App() {
     }
   };
 
-  const downloadGPX = useCallback(() => {
+  const downloadGPX = useCallback(async () => {
     if (images.length === 0) {
       setError('No coordinates available to generate GPX');
       return;
     }
-
-    const gpxData = generateGPX(images);
-    const blob = new Blob([gpxData], { type: 'application/gpx+xml' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'photo-route.gpx';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  
+    try {
+      const gpxData = await generateGPX(images); // Await the async function
+      const blob = new Blob([gpxData], { type: 'application/gpx+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'photo-route.gpx';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error generating GPX:', err);
+      setError('Error generating GPX. Please try again.');
+    }
   }, [images]);
+  
 
   const handleNext = () => {
     setSelectedImageIndex((prev) => Math.min(prev + 1, images.length - 1));
