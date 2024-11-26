@@ -1,3 +1,5 @@
+// src/App.tsx
+
 import React, { useState, useCallback, useRef } from 'react';
 import {
   Upload, Download, Map as MapIcon, Image as ImageIcon,
@@ -10,27 +12,17 @@ import { generateGPX } from './utils/gpx';
 import ImageViewer from './components/ImageViewer';
 import { ImageMetadata } from './types';
 import exifr from 'exifr';
+import { theme } from './themes'; // Import the theme
 
-// Centralized Theme Object
-const theme = {
-  gradientBg: 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100',
-  glassPane: 'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl',
-  buttonPrimary: 'bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 ease-in-out transform hover:scale-105',
-  buttonSecondary: 'bg-gray-300 hover:bg-gray-400 text-black transition-all duration-200 ease-in-out',
-  inputStyle: 'bg-gray-200 border border-gray-300 rounded-lg p-2 text-black focus:ring-2 focus:ring-blue-500',
-  textPrimary: 'text-gray-800',
-  textSecondary: 'text-gray-600',
-  errorBg: 'bg-red-100 border border-red-400 text-red-700',
-  successBg: 'bg-green-100 border border-green-400 text-green-700',
-};
+// Define GPXPoint type
+interface GPXPoint {
+  lat: number;
+  lon: number;
+  name?: string;
+  time?: string;
+}
 
 function App() {
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
-  };
-
   // Tab Navigation State
   const [activeTab, setActiveTab] = useState<'map' | 'gpxViewer' | 'metadataViewer'>('map');
 
@@ -187,18 +179,10 @@ function App() {
      ====== GPX Viewer States ======
      ============================== */
   const [gpxFile, setGpxFile] = useState<File | null>(null);
-  const [gpxPoints, setGpxPoints] = useState<GPXPoint[]>([]); // Define GPXPoint type
+  const [gpxPoints, setGpxPoints] = useState<GPXPoint[]>([]);
   const [gpxLoading, setGpxLoading] = useState(false);
   const [gpxError, setGpxError] = useState<string | null>(null);
   const gpxInputRef = useRef<HTMLInputElement>(null);
-
-  // Define GPXPoint type
-  interface GPXPoint {
-    lat: number;
-    lon: number;
-    name?: string;
-    time?: string;
-  }
 
   // Handle GPX File Upload
   const handleGpxUpload = async (
@@ -335,51 +319,51 @@ function App() {
      ====== Render Function ========
      ============================== */
   return (
-    <div className={`min-h-screen ${theme.gradientBg} ${theme.textPrimary} py-8 px-4`}>
-      <motion.div 
+    <div className={`${theme.layout.container}`}>
+      <motion.div
         className="max-w-7xl mx-auto space-y-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         {/* Header */}
-        <motion.div 
-          className="text-center space-y-4"
-          variants={fadeIn}
+        <motion.div
+          className={`${theme.layout.header}`}
+          variants={theme.animations.fadeIn}
           initial="initial"
           animate="animate"
         >
-          <h1 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-500">
+          <h1 className={theme.text.heading1}>
             Udaan Recce Route Mapper
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className={theme.text.paragraph}>
             Transform your journey into interactive visualizations
           </p>
         </motion.div>
 
         {/* Tab Navigation */}
-        <motion.div 
-          className={`${theme.glassPane} p-4`}
-          variants={fadeIn}
+        <motion.div
+          className={`${theme.layout.glassPane}`}
+          variants={theme.animations.fadeIn}
           initial="initial"
           animate="animate"
         >
-          <nav className="flex space-x-4">
+          <nav className={`${theme.layout.nav}`}>
             {['map', 'gpxViewer', 'metadataViewer'].map((tab) => (
               <motion.button
                 key={tab}
                 onClick={() => setActiveTab(tab as any)}
                 className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 ${
-                  activeTab === tab 
+                  activeTab === tab
                     ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30'
                     : 'bg-gray-300/50 text-gray-800 hover:bg-gray-400/50'
                 }`}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {tab === 'map' && <MapIcon className="w-4 h-4" />}
-                {tab === 'gpxViewer' && <FileText className="w-4 h-4" />}
-                {tab === 'metadataViewer' && <Info className="w-4 h-4" />}
+                {tab === 'map' && <MapIcon className={theme.colors.button.icon} />}
+                {tab === 'gpxViewer' && <FileText className={theme.colors.button.icon} />}
+                {tab === 'metadataViewer' && <Info className={theme.colors.button.icon} />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1).replace('Viewer', ' Viewer')}
               </motion.button>
             ))}
@@ -388,8 +372,8 @@ function App() {
 
         {/* Main Content Area */}
         <AnimatePresence mode="wait">
-          <motion.div 
-            className={`${theme.glassPane} p-8`}
+          <motion.div
+            className={`${theme.layout.contentPane}`}
             key={activeTab}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -399,51 +383,52 @@ function App() {
             {activeTab === 'map' && (
               <div className="space-y-8">
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-3">
+                  <h2 className={`${theme.text.heading2}`}>
                     <ImageIcon className="w-6 h-6 text-blue-500" />
                     <span>Image Upload</span>
                   </h2>
-                  <p className="text-gray-600">
+                  <p className={`${theme.text.textSecondary}`}>
                     Select GPS-tagged images to visualize your route. Supported formats: JPG, JPEG, PNG
                   </p>
                   <div className="flex gap-4">
                     <motion.button
                       onClick={() => uploadInputRef.current?.click()}
-                      className={`${theme.buttonPrimary} px-6 py-3 rounded-lg flex items-center gap-2`}
+                      className={`${theme.buttons.upload} ${theme.colors.primary}`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Upload className="w-4 h-4" />
+                      <Upload className={`${theme.colors.button.icon}`} />
                       Upload Images
                     </motion.button>
                     <motion.button
                       onClick={() => addInputRef.current?.click()}
-                      className={`${theme.buttonSecondary} px-6 py-3 rounded-lg flex items-center gap-2`}
+                      className={`${theme.buttons.upload} ${theme.colors.secondary}`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Upload className="w-4 h-4" />
+                      <Upload className={`${theme.colors.button.icon}`} />
                       Add More Images
                     </motion.button>
                   </div>
                 </div>
 
                 {loading && (
-                  <motion.div 
+                  <motion.div
                     className="flex items-center justify-center py-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    variants={theme.animations.spinner}
+                    initial="initial"
+                    animate="animate"
                   >
                     <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                      <p className="text-gray-600">Processing your images...</p>
+                      <div className={`${theme.colors.spinner}`} />
+                      <p className={`${theme.text.textSecondary}`}>Processing your images...</p>
                     </div>
                   </motion.div>
                 )}
 
                 {error && (
-                  <motion.div 
-                    className={`${theme.errorBg} p-4 rounded-lg`}
+                  <motion.div
+                    className={`${theme.colors.error} p-4 rounded-lg`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -453,7 +438,7 @@ function App() {
                 )}
 
                 {images.length > 0 && (
-                  <motion.div 
+                  <motion.div
                     className="space-y-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -466,7 +451,7 @@ function App() {
                       <div className="flex items-center gap-4">
                         <motion.button
                           onClick={() => setShowLines(!showLines)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400"
+                          className={`${theme.buttons.toggle}`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
@@ -475,7 +460,7 @@ function App() {
                         </motion.button>
                         <motion.button
                           onClick={() => setShowPoints(!showPoints)}
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400"
+                          className={`${theme.buttons.toggle}`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
@@ -484,18 +469,18 @@ function App() {
                         </motion.button>
                         <motion.button
                           onClick={downloadGPX}
-                          className={`${theme.buttonPrimary} px-6 py-2 rounded-lg flex items-center gap-2`}
+                          className={`${theme.colors.primary} px-6 py-2 rounded-lg flex items-center gap-2`}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <Download className="w-4 h-4" />
+                          <Download className={`${theme.colors.button.icon}`} />
                           Export GPX
                         </motion.button>
                       </div>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <motion.div 
-                        className={`${theme.glassPane} overflow-hidden`}
+                      <motion.div
+                        className={`${theme.layout.glassPane} overflow-hidden`}
                         layout
                       >
                         <Map
@@ -506,8 +491,8 @@ function App() {
                           showPoints={showPoints}
                         />
                       </motion.div>
-                      <motion.div 
-                        className={`${theme.glassPane} overflow-hidden`}
+                      <motion.div
+                        className={`${theme.layout.glassPane} overflow-hidden`}
                         layout
                       >
                         <ImageViewer
@@ -519,15 +504,15 @@ function App() {
                       </motion.div>
                     </div>
 
-                    <motion.div 
+                    <motion.div
                       className="text-sm text-gray-600 flex items-center gap-4"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                     >
-                      <span className="px-3 py-1 rounded-full bg-blue-100 border border-blue-300">
+                      <span className={`${theme.layout.badge}`}>
                         {images.length} photos plotted
                       </span>
-                      <span className="px-3 py-1 rounded-full bg-blue-100 border border-blue-300">
+                      <span className={`${theme.layout.badge}`}>
                         {calculateDistance(images).toFixed(2)} km total distance
                       </span>
                     </motion.div>
@@ -537,26 +522,26 @@ function App() {
             )}
 
             {activeTab === 'gpxViewer' && (
-              <motion.div 
+              <motion.div
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-3">
+                  <h2 className={`${theme.text.heading2}`}>
                     <FileText className="w-6 h-6 text-blue-500" />
                     GPX File Viewer
                   </h2>
-                  <p className="text-gray-600">
+                  <p className={`${theme.text.textSecondary}`}>
                     Upload a GPX file to visualize your route data
                   </p>
                   <motion.button
                     onClick={() => gpxInputRef.current?.click()}
-                    className={`${theme.buttonPrimary} px-6 py-3 rounded-lg flex items-center gap-2`}
+                    className={`${theme.colors.primary} ${theme.buttons.upload}`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Upload className="w-4 h-4" />
+                    <Upload className={`${theme.colors.button.icon}`} />
                     Upload GPX File
                     {gpxFile && (
                       <span className="ml-2 text-sm opacity-80">
@@ -567,21 +552,22 @@ function App() {
                 </div>
 
                 {gpxLoading && (
-                  <motion.div 
+                  <motion.div
                     className="flex items-center justify-center py-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    variants={theme.animations.spinner}
+                    initial="initial"
+                    animate="animate"
                   >
                     <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                      <p className="text-gray-600">Processing GPX file...</p>
+                      <div className={`${theme.colors.spinner}`} />
+                      <p className={`${theme.text.textSecondary}`}>Processing GPX file...</p>
                     </div>
                   </motion.div>
                 )}
 
                 {gpxError && (
-                  <motion.div 
-                    className={`${theme.errorBg} p-4 rounded-lg`}
+                  <motion.div
+                    className={`${theme.colors.error} p-4 rounded-lg`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -591,8 +577,8 @@ function App() {
                 )}
 
                 {gpxPoints.length > 0 && (
-                  <motion.div 
-                    className={`${theme.glassPane} p-4`}
+                  <motion.div
+                    className={`${theme.layout.glassPane} p-4`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
@@ -603,26 +589,26 @@ function App() {
             )}
 
             {activeTab === 'metadataViewer' && (
-              <motion.div 
+              <motion.div
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
                 <div className="space-y-4">
-                  <h2 className="text-2xl font-semibold text-gray-800 flex items-center gap-3">
+                  <h2 className={`${theme.text.heading2}`}>
                     <Info className="w-6 h-6 text-blue-500" />
                     Image Metadata Viewer
                   </h2>
-                  <p className="text-gray-600">
+                  <p className={`${theme.text.textSecondary}`}>
                     Upload an image to view its detailed metadata
                   </p>
                   <motion.button
                     onClick={() => metadataInputRef.current?.click()}
-                    className={`${theme.buttonPrimary} px-6 py-3 rounded-lg flex items-center gap-2`}
+                    className={`${theme.colors.primary} ${theme.buttons.upload}`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Upload className="w-4 h-4" />
+                    <Upload className={`${theme.colors.button.icon}`} />
                     Select Image
                     {metadataImage && (
                       <span className="ml-2 text-sm opacity-80">
@@ -633,21 +619,22 @@ function App() {
                 </div>
 
                 {metadataLoading && (
-                  <motion.div 
+                  <motion.div
                     className="flex items-center justify-center py-8"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    variants={theme.animations.spinner}
+                    initial="initial"
+                    animate="animate"
                   >
                     <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
-                      <p className="text-gray-600">Extracting metadata...</p>
+                      <div className={`${theme.colors.spinner}`} />
+                      <p className={`${theme.text.textSecondary}`}>Extracting metadata...</p>
                     </div>
                   </motion.div>
                 )}
 
                 {metadataError && (
-                  <motion.div 
-                    className={`${theme.errorBg} p-4 rounded-lg`}
+                  <motion.div
+                    className={`${theme.colors.error} p-4 rounded-lg`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                   >
@@ -657,25 +644,25 @@ function App() {
                 )}
 
                 {metadata && (
-                  <motion.div 
+                  <motion.div
                     className="space-y-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <h3 className="text-xl font-semibold text-gray-800">
+                    <h3 className={`${theme.text.heading3}`}>
                       Metadata Results
                     </h3>
-                    <div className={`${theme.glassPane} overflow-x-auto`}>
-                      <table className="w-full">
+                    <div className={`${theme.layout.glassPane} overflow-x-auto`}>
+                      <table className={`${theme.layout.table}`}>
                         <thead>
-                          <tr className="border-b border-gray-300">
+                          <tr className={`${theme.layout.tableHeader}`}>
                             <th className="py-3 px-4 text-left text-gray-600">Field</th>
                             <th className="py-3 px-4 text-left text-gray-600">Value</th>
                           </tr>
                         </thead>
                         <tbody>
                           {Object.entries(metadata).map(([key, value]) => (
-                            <tr key={key} className="border-b border-gray-200 hover:bg-gray-100">
+                            <tr key={key} className={`${theme.layout.tableRow}`}>
                               <td className="py-3 px-4 font-medium text-blue-500">{key}</td>
                               <td className="py-3 px-4 text-gray-700">
                                 {typeof value === 'object' ? JSON.stringify(value) : String(value)}

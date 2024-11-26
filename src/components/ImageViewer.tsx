@@ -1,9 +1,11 @@
+// src/components/ImageViewer.tsx
+
 import React, { useEffect, useState, useRef } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
-  Camera,
   Calendar,
+  Camera,
   Mountain,
   Aperture,
   X,
@@ -13,22 +15,7 @@ import {
 import { ImageMetadata } from '../types';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Centralized Theme Object (Ensure this matches the theme in App.tsx)
-const theme = {
-  glassPane:
-    'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl',
-  buttonPrimary:
-    'bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 ease-in-out transform hover:scale-105',
-  buttonSecondary:
-    'bg-gray-300 hover:bg-gray-400 text-black transition-all duration-200 ease-in-out',
-  inputStyle:
-    'bg-gray-200 border border-gray-300 rounded-lg p-2 text-black focus:ring-2 focus:ring-blue-500',
-  textPrimary: 'text-gray-800',
-  textSecondary: 'text-gray-600',
-  errorBg: 'bg-red-100 border border-red-400 text-red-700',
-  successBg: 'bg-green-100 border border-green-400 text-green-700',
-};
+import { theme } from '../themes'; // Import the centralized theme
 
 interface ImageViewerProps {
   images: ImageMetadata[];
@@ -100,10 +87,11 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
               src={currentImage.url}
               alt={`Location ${currentIndex + 1}`}
               className="w-full h-full object-cover cursor-pointer"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              variants={theme.animations.imageFade}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={theme.animations.imageFade.transition}
               onClick={toggleEnlarge}
             />
           </AnimatePresence>
@@ -114,7 +102,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
             <motion.button
               onClick={onPrevious}
               disabled={currentIndex === 0}
-              className="p-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 text-white/90 hover:bg-black/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              className={`${theme.buttons.navigation}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Previous Image"
@@ -124,7 +112,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
             <motion.button
               onClick={onNext}
               disabled={currentIndex === images.length - 1}
-              className="p-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 text-white/90 hover:bg-black/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+              className={`${theme.buttons.navigation}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Next Image"
@@ -145,7 +133,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
             </motion.h3>
             <div className="flex items-center gap-2">
               <motion.div
-                className="px-3 py-1 rounded-full bg-blue-100 border border-blue-300 text-blue-500 text-sm"
+                className={`${theme.colors.badge}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
@@ -154,7 +142,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
               {/* Enlarge Toggle Button */}
               <motion.button
                 onClick={toggleEnlarge}
-                className="p-2 rounded-full bg-gray-300 hover:bg-gray-400 text-gray-800 transition-all duration-200 ease-in-out"
+                className={`${theme.buttons.enlarge}`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 aria-label={isEnlarged ? 'Minimize Image' : 'Enlarge Image'}
@@ -237,35 +225,41 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
       <AnimatePresence>
         {isEnlarged && (
           <motion.div
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            className={`${theme.colors.overlay}`}
+            variants={theme.animations.fadeIn}
+            initial="initial"
+            animate="animate"
+            exit="exit"
             onClick={toggleEnlarge}
           >
             <motion.div
-              className="relative bg-white rounded-lg overflow-hidden"
-              style={{ width: '80vw' }} // 80% of viewport width
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-              transition={{ duration: 0.3 }}
+              className={`${theme.colors.modal}`}
+              variants={theme.animations.modalScale}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              transition={theme.animations.modalScale.transition}
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+              style={{ width: '80vw' }} // 80% of viewport width
             >
               <motion.img
                 src={currentImage.url}
                 alt={`Location ${currentIndex + 1}`}
                 className="w-full h-auto object-contain"
+                variants={theme.animations.imageFade}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={theme.animations.imageFade.transition}
+              />
+              <motion.button
+                onClick={toggleEnlarge}
+                className={`${theme.text.modalClose}`}
+                variants={theme.animations.fadeIn}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
-              />
-              <motion.button
-                onClick={toggleEnlarge}
-                className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white/100 transition-all"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
                 aria-label="Close Enlarged View"
               >
                 <X className="w-6 h-6 text-gray-800" />

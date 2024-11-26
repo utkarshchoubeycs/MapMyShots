@@ -1,160 +1,75 @@
-// themes.ts
-export const themes = {
-    light: {
-      // Background Styles
-      backgrounds: {
-        primary: 'bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50',
-        secondary: 'bg-gradient-to-r from-blue-50 to-indigo-50',
-        glass: 'backdrop-blur-md bg-white/80',
-        card: 'bg-white',
-        hover: 'hover:bg-gray-50',
+// src/theme.ts
+
+export const theme = {
+    colors: {
+      primary: 'bg-blue-600 hover:bg-blue-700 text-white',
+      secondary: 'bg-gray-300 hover:bg-gray-400 text-black',
+      error: 'bg-red-100 border border-red-400 text-red-700',
+      success: 'bg-green-100 border border-green-400 text-green-700',
+      backgroundGradient: 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100',
+      glass: 'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl',
+      textPrimary: 'text-gray-800',
+      textSecondary: 'text-gray-600',
+      button: {
+        primary: 'bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 ease-in-out transform hover:scale-105',
+        secondary: 'bg-gray-300 hover:bg-gray-400 text-black transition-all duration-200 ease-in-out transform hover:scale-105',
+        icon: 'w-4 h-4',
       },
-  
-      // Container Styles
-      containers: {
-        glass: 'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl shadow-lg',
-        card: 'bg-white border border-gray-200 rounded-xl shadow-lg',
-        section: 'p-8 rounded-xl border border-gray-200',
-        modal: 'bg-white rounded-xl shadow-2xl p-6',
+      spinner: 'w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin',
+      badge: 'px-3 py-1 rounded-full bg-blue-100 border border-blue-300 text-blue-500 text-sm',
+      overlay: 'fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4',
+      modal: 'relative bg-white rounded-lg overflow-hidden',
+      table: 'w-full',
+      tableHeader: 'border-b border-gray-300',
+      tableRow: 'border-b border-gray-200 hover:bg-gray-100',
+    },
+    buttons: {
+      upload: 'flex items-center gap-2 px-6 py-3 rounded-lg',
+      toggle: 'flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-300 hover:bg-gray-400',
+      navigation: 'p-2 rounded-full bg-black/30 backdrop-blur-sm border border-white/10 text-white/90 hover:bg-black/50 disabled:opacity-30 disabled:cursor-not-allowed transition-all',
+      enlarge: 'p-2 rounded-full bg-gray-300 hover:bg-gray-400 text-gray-800 transition-all duration-200 ease-in-out',
+    },
+    layout: {
+      container: 'min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 text-gray-800 py-8 px-4',
+      header: 'text-center space-y-4',
+      nav: 'flex space-x-4',
+      glassPane: 'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl p-4',
+      contentPane: 'backdrop-blur-md bg-white/80 border border-gray-200 rounded-xl p-8',
+      table: 'w-full',
+      tableHeader: 'border-b border-gray-300',
+      tableRow: 'border-b border-gray-200 hover:bg-gray-100',
+      badge: 'px-3 py-1 rounded-full bg-blue-100 border border-blue-300',
+    },
+    text: {
+      heading1: 'text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-green-500',
+      heading2: 'text-2xl font-semibold text-gray-800 flex items-center gap-3',
+      heading3: 'text-xl font-semibold text-gray-800',
+      paragraph: 'text-lg text-gray-600',
+      small: 'text-sm text-gray-600',
+      modalClose: 'absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white/100 transition-all',
+    },
+    animations: {
+      fadeIn: {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -20 },
       },
-  
-      // Button Styles
-      buttons: {
-        primary: `
-          bg-gradient-to-r from-blue-600 to-indigo-600
-          hover:from-blue-700 hover:to-indigo-700
-          text-white font-medium
-          transition-all duration-200 ease-in-out
-          transform hover:scale-105 hover:shadow-lg
-          active:scale-95
-        `,
-        secondary: `
-          bg-gray-200 hover:bg-gray-300
-          text-gray-800
-          transition-all duration-200 ease-in-out
-          transform hover:scale-105
-          active:scale-95
-        `,
-        outline: `
-          border-2 border-gray-300 hover:border-gray-400
-          text-gray-700 hover:text-gray-900
-          bg-transparent hover:bg-gray-50
-          transition-all duration-200
-        `,
-        icon: `
-          p-2 rounded-lg
-          hover:bg-gray-100
-          text-gray-600 hover:text-gray-900
-          transition-all duration-200
-        `,
+      spinner: {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        transition: { duration: 0.5 },
       },
-  
-      // Text Styles
-      text: {
-        primary: 'text-gray-900',
-        secondary: 'text-gray-600',
-        muted: 'text-gray-400',
-        heading: `
-          font-bold
-          bg-clip-text text-transparent
-          bg-gradient-to-r from-gray-900 to-gray-600
-        `,
-        subheading: 'text-gray-600 font-medium',
+      modalScale: {
+        initial: { scale: 0.8 },
+        animate: { scale: 1 },
+        exit: { scale: 0.8 },
+        transition: { duration: 0.3 },
       },
-  
-      // Input Styles
-      inputs: {
-        primary: `
-          bg-gray-50
-          border border-gray-300
-          rounded-lg p-2
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500
-          transition-all duration-200
-        `,
-        search: `
-          bg-gray-100
-          border border-gray-200
-          rounded-full px-4 py-2
-          focus:ring-2 focus:ring-blue-400
-          transition-all duration-200
-        `,
-      },
-  
-      // Status/Feedback Styles
-      status: {
-        success: {
-          bg: 'bg-green-50',
-          border: 'border-green-200',
-          text: 'text-green-700',
-        },
-        error: {
-          bg: 'bg-red-50',
-          border: 'border-red-200',
-          text: 'text-red-700',
-        },
-        warning: {
-          bg: 'bg-yellow-50',
-          border: 'border-yellow-200',
-          text: 'text-yellow-700',
-        },
-        info: {
-          bg: 'bg-blue-50',
-          border: 'border-blue-200',
-          text: 'text-blue-700',
-        },
-      },
-  
-      // Animation Variants
-      animations: {
-        fadeIn: {
-          initial: { opacity: 0, y: 20 },
-          animate: { opacity: 1, y: 0 },
-          exit: { opacity: 0, y: -20 },
-          transition: { duration: 0.3 },
-        },
-        slideIn: {
-          initial: { x: -20, opacity: 0 },
-          animate: { x: 0, opacity: 1 },
-          exit: { x: 20, opacity: 0 },
-          transition: { duration: 0.3 },
-        },
-      },
-  
-      // Layout Styles
-      layout: {
-        maxWidth: 'max-w-7xl',
-        padding: 'px-4 sm:px-6 lg:px-8',
-        spacing: 'space-y-8',
-        grid: 'grid gap-6',
-      },
-  
-      // Custom Components
-      components: {
-        navbar: `
-          sticky top-0 z-50
-          backdrop-blur-lg bg-white/80
-          border-b border-gray-200
-          transition-all duration-300
-        `,
-        sidebar: `
-          fixed inset-y-0 left-0
-          w-64 bg-white
-          border-r border-gray-200
-          transition-all duration-300
-        `,
-        tooltip: `
-          bg-gray-900 text-white
-          px-2 py-1 rounded
-          text-sm font-medium
-          shadow-lg
-        `,
+      imageFade: {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.2 },
       },
     },
-    // You can add more theme variations here (dark, custom, etc.)
-  };
-  
-  // Theme Utils
-  export const getThemeClass = (path: string, theme = 'light') => {
-    return path.split('.').reduce((obj, key) => obj[key], themes[theme]);
-  };
-  
+  };  
