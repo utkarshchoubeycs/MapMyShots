@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -6,6 +6,7 @@ import {
   Marker,
   Popup,
   useMapEvents,
+  useMap,
 } from 'react-leaflet';
 import { Icon, DivIcon } from 'leaflet';
 import { ImageMetadata } from '../types';
@@ -94,6 +95,17 @@ const ZoomHandler = ({ setZoomLevel, setBounds }) => {
   return null;
 };
 
+// New component to close popups when selectedIndex changes
+const PopupCloser = ({ selectedIndex }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    map.closePopup();
+  }, [selectedIndex, map]);
+
+  return null;
+};
+
 const Map: React.FC<MapProps> = ({
   images,
   selectedIndex,
@@ -170,6 +182,9 @@ const Map: React.FC<MapProps> = ({
       >
         {/* Include the ZoomHandler to update zoom level and bounds */}
         <ZoomHandler setZoomLevel={setZoomLevel} setBounds={setBounds} />
+
+        {/* Include the PopupCloser to close popups when selectedIndex changes */}
+        <PopupCloser selectedIndex={selectedIndex} />
 
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
