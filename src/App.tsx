@@ -334,7 +334,7 @@ function App() {
           animate="animate"
         >
           <h1 className={theme.text.heading1}>
-            Udaan Recce Route Mapper
+            Map My Shots
           </h1>
           <p className={theme.text.paragraph}>
             Transform your journey into interactive visualizations
