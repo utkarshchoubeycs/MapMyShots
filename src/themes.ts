@@ -45,6 +45,7 @@ export const theme = {
       heading2: 'text-2xl font-semibold text-gray-800 flex items-center gap-3',
       heading3: 'text-xl font-semibold text-gray-800',
       paragraph: 'text-lg text-gray-600',
+      textSecondary: 'text-gray-600',
       small: 'text-sm text-gray-600',
       modalClose: 'absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white/100 transition-all',
     },

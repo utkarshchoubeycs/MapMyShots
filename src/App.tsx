@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useRef } from 'react';
 import {
   Upload, Download, Map as MapIcon, Image as ImageIcon,
-  Eye, EyeOff, FileText, Info, ChevronRight
+  Eye, EyeOff, FileText, Info
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion'; // Ensure framer-motion is installed
 import Map from './components/Map';
@@ -341,7 +341,7 @@ function App() {
           initial="initial"
           animate="animate"
         >
-          <nav className={`${theme.layout.nav}`}>
+          <nav className="flex flex-col sm:flex-row gap-2 sm:gap-4">
             {['map', 'gpxViewer', 'metadataViewer'].map((tab) => (
               <motion.button
                 key={tab}
@@ -380,10 +380,10 @@ function App() {
                     <ImageIcon className="w-6 h-6 text-blue-500" />
                     <span>Image Upload</span>
                   </h2>
-                  <p className={`${theme.text.textSecondary}`}>
-                    Select GPS-tagged images to visualize your route. Supported formats: JPG, JPEG, PNG
-                  </p>
-                  <div className="flex gap-4">
+                  <div className={`${theme.text.textSecondary}`}>
+                    <p>Select GPS-tagged images to visualize your route. Supported formats: JPG, JPEG, PNG </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                     <motion.button
                       onClick={() => uploadInputRef.current?.click()}
                       className={`${theme.buttons.upload} ${theme.colors.primary}`}
@@ -414,7 +414,10 @@ function App() {
                   >
                     <div className="flex flex-col items-center gap-4">
                       <div className={`${theme.colors.spinner}`} />
-                      <p className={`${theme.text.textSecondary}`}>Processing your images...</p>
+                      <div className="text-center">
+                        <p className={`${theme.text.textSecondary} font-medium`}>Processing your images...</p>
+                        <p className="text-sm text-gray-500 mt-1">Extracting GPS data and metadata</p>
+                      </div>
                     </div>
                   </motion.div>
                 )}
@@ -441,7 +444,7 @@ function App() {
                         <MapIcon className="w-5 h-5 text-blue-500" />
                         Route Visualization
                       </h3>
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
                         <motion.button
                           onClick={() => setShowLines(!showLines)}
                           className={`${theme.buttons.toggle}`}
