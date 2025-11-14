@@ -8,19 +8,12 @@ import {
 import { motion, AnimatePresence } from 'framer-motion'; // Ensure framer-motion is installed
 import Map from './components/Map';
 import GpxMap from './components/GpxMap';
-import { generateGPX } from './utils/gpx';
+import { generateGPX } from './lib/gpx';
 import ImageViewer from './components/ImageViewer';
-import { ImageMetadata } from './types';
+import { ImageMetadata, GPXPoint } from './types';
 import exifr from 'exifr';
 import { theme } from './themes'; // Import the theme
 
-// Define GPXPoint type
-interface GPXPoint {
-  lat: number;
-  lon: number;
-  name?: string;
-  time?: string;
-}
 
 function App() {
   // Tab Navigation State

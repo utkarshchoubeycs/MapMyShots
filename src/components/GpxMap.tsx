@@ -11,6 +11,7 @@ import {
 } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { GPXPoint } from '../types';
 
 // Fixing default icon issues in Leaflet when using Webpack
 import L from 'leaflet';
@@ -27,13 +28,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl:
     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
-
-interface GPXPoint {
-  lat: number;
-  lon: number;
-  name?: string;
-  time?: string;
-}
 
 interface GpxMapProps {
   gpxPoints: GPXPoint[];
@@ -117,7 +111,7 @@ const GpxMap: React.FC<GpxMapProps> = ({ gpxPoints }) => {
               <strong>Start Point</strong>
               {gpxPoints[0].name && <div>{gpxPoints[0].name}</div>}
               {gpxPoints[0].time && (
-                <div>{new Date(gpxPoints[0].time).toLocaleString()}</div>
+                <div>{new Date(gpxPoints[0].time as string).toLocaleString()}</div>
               )}
             </Popup>
           </Marker>
@@ -135,7 +129,7 @@ const GpxMap: React.FC<GpxMapProps> = ({ gpxPoints }) => {
                 <div>{gpxPoints[gpxPoints.length - 1].name}</div>
               )}
               {gpxPoints[gpxPoints.length - 1].time && (
-                <div>{new Date(gpxPoints[gpxPoints.length - 1].time).toLocaleString()}</div>
+                <div>{new Date(gpxPoints[gpxPoints.length - 1].time as string).toLocaleString()}</div>
               )}
             </Popup>
           </Marker>

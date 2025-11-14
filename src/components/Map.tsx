@@ -82,7 +82,10 @@ interface MapProps {
   showPoints: boolean;
 }
 
-const ZoomHandler = ({ setZoomLevel, setBounds }) => {
+const ZoomHandler = ({ setZoomLevel, setBounds }: {
+  setZoomLevel: (zoom: number) => void;
+  setBounds: (bounds: any) => void;
+}) => {
   const map = useMapEvents({
     zoomend: () => {
       setZoomLevel(map.getZoom());
@@ -92,11 +95,17 @@ const ZoomHandler = ({ setZoomLevel, setBounds }) => {
       setBounds(map.getBounds());
     },
   });
+
+  // Initialize on first render
+  React.useEffect(() => {
+    setZoomLevel(map.getZoom());
+    setBounds(map.getBounds());
+  }, [map, setZoomLevel, setBounds]);
   return null;
 };
 
 // New component to close popups when selectedIndex changes
-const PopupCloser = ({ selectedIndex }) => {
+const PopupCloser = ({ selectedIndex }: { selectedIndex: number }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -114,7 +123,7 @@ const Map: React.FC<MapProps> = ({
   showPoints,
 }) => {
   const [zoomLevel, setZoomLevel] = useState(13); // Initialize with default zoom level
-  const [bounds, setBounds] = useState(null); // State to hold map bounds
+  const [bounds, setBounds] = useState<any>(null); // State to hold map bounds
 
   const coordinates: [number, number][] = images.map((img) => [
     img.latitude,
@@ -135,7 +144,7 @@ const Map: React.FC<MapProps> = ({
   }
 
   // Define sample rate based on zoom level
-  const calculateSampleRate = (zoom) => {
+  const calculateSampleRate = (zoom: number) => {
     if (zoom >= 18) return 1;
     if (zoom >= 17) return 6;
     if (zoom >= 16) return 12;
@@ -173,9 +182,8 @@ const Map: React.FC<MapProps> = ({
       <MapContainer
         center={center}
         zoom={13}
-        whenCreated={(mapInstance) => {
-          setZoomLevel(mapInstance.getZoom());
-          setBounds(mapInstance.getBounds());
+        whenReady={() => {
+          // Map initialization will be handled by ZoomHandler
         }}
         style={{ height: '100%', width: '100%' }}
         className="rounded-lg z-0"
@@ -233,7 +241,7 @@ const Map: React.FC<MapProps> = ({
                           <strong>Photo {imageIdx + 1}</strong>
                         )}
                       {image.timestamp && (
-                        <div>{format(image.timestamp, 'PPpp')}</div>
+                        <div>{format(new Date(image.timestamp as string | number | Date), 'PPpp')}</div>
                       )}
                       {image.make && image.model && (
                         <div>

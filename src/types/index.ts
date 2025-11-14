@@ -12,3 +12,19 @@ export interface ImageMetadata {
   iso?: number;
   focalLength?: number;
 }
+
+export interface GPXRoute {
+  name?: string;
+  desc?: string;
+  author?: string;
+  email?: string;
+  link?: string;
+  time?: Date;
+}
+
+export interface GPXPoint {
+  lat: number;
+  lon: number;
+  name?: string;
+  time?: string;
+}

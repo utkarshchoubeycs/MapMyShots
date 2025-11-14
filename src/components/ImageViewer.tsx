@@ -173,7 +173,7 @@ const ImageViewer: React.FC<ImageViewerProps> = ({
             {currentImage.timestamp && (
               <div className="flex items-center gap-3 bg-gray-100 px-4 py-3 rounded-lg">
                 <Calendar className="w-4 h-4 text-blue-500" />
-                <span>{format(new Date(currentImage.timestamp), 'PPpp')}</span>
+                <span>{format(new Date(currentImage.timestamp as string | number | Date), 'PPpp')}</span>
               </div>
             )}
             {(currentImage.make || currentImage.model) && (
