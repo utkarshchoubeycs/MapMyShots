@@ -1,4 +1,4 @@
-MapMyShot README.md
+## MapMyShot
 
 ![MapMyShots](https://img.shields.io/badge/MapMyShots-Modern%20GPX%20Toolkit-blue?style=for-the-badge)
 
